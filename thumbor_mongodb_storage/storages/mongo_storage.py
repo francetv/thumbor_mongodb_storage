@@ -5,6 +5,7 @@
 # Copyright (c) 2011 globo.com timehome@corp.globo.com
 import gridfs
 import urllib
+import re
 from datetime import datetime, timedelta
 from cStringIO import StringIO
 from pymongo import MongoClient
@@ -67,7 +68,8 @@ class Storage(BaseStorage):
 
     def truepath(self, path):
         pasplit = path.split("/")
-        return pasplit[0]
+        pasplitf = re.search('^[a-z0-9A-Z]+', pasplit[0]).group(0)
+        return pasplitf
 
 
     @return_future
