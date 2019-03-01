@@ -54,18 +54,16 @@ class Storage(BaseStorage):
 
         if not self.context.server.security_key:
             raise RuntimeError("STORES_CRYPTO_KEY_FOR_EACH_IMAGE can't be True if no SECURITY_KEY specified")
-        pasplit = path.split("/")
         crypto = storage.find_one({'path': tpath})
         crypto['crypto'] = self.context.server.security_key
         storage.update({'path': tpath}, crypto)
-        return pasplit[0]
+        return tpath
 
     def put_detector_data(self, path, data):
         connection, db, storage = self.__conn__()
         tpath = self.truepath(path)
-        pasplit = path.split("/")
         storage.update({'path': tpath}, {"$set": {"detector_data": data}})
-        return pasplit[0]
+        return tpath
 
     def truepath(self, path):
         pasplit = path.split("/")
@@ -76,14 +74,12 @@ class Storage(BaseStorage):
     def get_crypto(self, path, callback):
         connection, db, storage = self.__conn__()
         tpath = self.truepath(path)
-        pasplit = path.split("/")
         crypto = storage.find_one({'path': tpath})
         callback(crypto.get('crypto') if crypto else None)
 
     @return_future
     def get_detector_data(self, path, callback):
         connection, db, storage = self.__conn__()
-        pasplit = path.split("/")
         tpath = self.truepath(path)
         doc = storage.find_one({'path': tpath})
         callback(doc.get('detector_data') if doc else None)
@@ -91,7 +87,6 @@ class Storage(BaseStorage):
     @return_future
     def get(self, path, callback):
         connection, db, storage = self.__conn__()
-        pasplit = path.split("/")
         tpath = self.truepath(path)
         stored = storage.find_one({'path': tpath})
 
@@ -111,7 +106,6 @@ class Storage(BaseStorage):
     def exists(self, path, callback):
         connection, db, storage = self.__conn__()
         tpath = self.truepath(path)
-        pasplit = path.split("/")
         stored = storage.find_one({'path': tpath})
         if not stored or self.__is_expired(stored):
             callback(False)
@@ -119,13 +113,12 @@ class Storage(BaseStorage):
             callback(True)
 
     def remove(self, path):
-        if not self.exists(path):
-            return
         tpath = self.truepath(path)
+        if not self.existstpath):
+            return
         connection, db, storage = self.__conn__()
-        pasplit = path.split("/")
         fs = gridfs.GridFS(db)
-        stored = storage.find_one({'path': self.truepath(path)})
+        stored = storage.find_one({'path': tpath})
         fs.delete(stored['file_id'])
         storage.remove({'path': tpath })
 
