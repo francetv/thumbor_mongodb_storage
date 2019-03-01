@@ -13,7 +13,7 @@ def read(fname):
 
 
 setup(
-    name="tc_mongodb",
+    name="thumbor_mongodb_storage",
     version="5.2.4",
     author="Thumbor Community",
     description=("Thumbor thumbor storage adapters - France.tv Release"),
@@ -21,13 +21,13 @@ setup(
     keywords="thumbor mongodb mongo",
     url="https://github.com/francetv/mongodb",
     packages=[
-        'tc_mongodb',
-        'tc_mongodb.storages',
-        'tc_mongodb.result_storages'
+        'thumbor_mongodb_storage',
+        'thumbor_mongodb_storage.storages',
+        'thumbor_mongodb_storage.result_storages'
     ],
     long_description=long_description,
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status ::4 - Beta',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
     ],
