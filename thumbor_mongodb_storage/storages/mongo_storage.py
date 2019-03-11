@@ -31,8 +31,7 @@ class Storage(BaseStorage):
         tpath = self.truepath(path)
         doc = {
             'path': tpath,
-            'created_at': datetime.utcnow(),
-            'last_access': datetime.utcnow()
+            'created_at': datetime.utcnow()           
         }
         doc_with_crypto = dict(doc)
 
