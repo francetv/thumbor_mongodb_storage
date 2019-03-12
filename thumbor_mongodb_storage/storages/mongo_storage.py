@@ -129,8 +129,11 @@ class Storage(BaseStorage):
 
         fs = gridfs.GridFS(db)
         stored = storage.find_one({'path': tpath})
-        fs.delete(stored['file_id'])
-        storage.remove({'path': tpath })
+        try:
+            fs.delete(stored['file_id'])
+            storage.remove({'path': tpath })
+        except:
+            return
 
     def __is_expired(self, stored):
         timediff = datetime.utcnow() - stored.get('created_at')
