@@ -98,7 +98,10 @@ class Storage(BaseStorage):
         #    return
 
         connection, db, storage = self.__conn__()
-        storage.remove({'path': path})
+        try:        
+            storage.remove({'path': path})
+        except:
+            return
 
 
     def __is_expired(self, result):
