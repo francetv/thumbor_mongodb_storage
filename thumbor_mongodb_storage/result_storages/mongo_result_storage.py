@@ -14,6 +14,9 @@ import bson
 from bson.binary import Binary
 
 class Storage(BaseStorage):
+    @property
+    def is_auto_webp(self):
+        return self.context.config.AUTO_WEBP and self.context.request.accepts_webp
 
     def __conn__(self):
         password = urllib.quote_plus(self.context.config.MONGO_RESULT_STORAGE_SERVER_PASSWORD)
@@ -57,10 +60,15 @@ class Storage(BaseStorage):
         key = self.get_key_from_request()
         max_age = self.get_max_age()
         result_ttl = self.get_max_age()
+        if self.is_auto_webp:
+            content_t = 'webp'
+        else:
+            content_t = 'default'
         doc = {
             'path': key,
             'created_at': datetime.utcnow(),
-            'data': Binary(bytes)
+            'data': Binary(bytes),
+            'content-type': content_t
             }
         doc_cpm = dict(doc)
 
@@ -80,8 +88,10 @@ class Storage(BaseStorage):
         '''Get the item .'''
         connection, db, storage = self.__conn__()
         key = self.get_key_from_request()
-        result = storage.find_one({"path": key})
-
+        if self.is_auto_webp:
+            result = storage.find_one({"path": key, "content-type": "webp"})
+        else:
+            result = storage.find_one({"path": key, "content-type": "default"})
         if not result: # or self.__is_expired(result):
             return None
         if result and  self.__is_expired(result):
@@ -98,10 +108,16 @@ class Storage(BaseStorage):
         #    return
 
         connection, db, storage = self.__conn__()
-        try:        
-            storage.remove({'path': path})
-        except:
-            return
+        if self.is_auto_webp:
+            try:
+                storage.remove({'path': path, "content-type": "webp"})
+            except:
+                return
+        else:
+            try:
+                storage.remove({'path': path, "content-type": "default"})
+            except:
+                return
 
 
     def __is_expired(self, result):
@@ -109,10 +125,7 @@ class Storage(BaseStorage):
         return timediff > timedelta(seconds=self.context.config.RESULT_STORAGE_EXPIRATION_SECONDS)
         '''future => db.log_events.createIndex( { "createdAt": 1 }, { expireAfterSeconds: 3600 } )
         db.runCommand( { collMod: <collection or view>, <option1>: <value1>, <option2>: <value2> ... } )
-        {keyPattern: <index_spec> || name: <index_name>, expireAfterSeconds: <seconds> }       
-        {getParameter:1, expireAfterSeconds: 1}      
+        {keyPattern: <index_spec> || name: <index_name>, expireAfterSeconds: <seconds> }
+        {getParameter:1, expireAfterSeconds: 1}
         '''
-        
-
-
 
