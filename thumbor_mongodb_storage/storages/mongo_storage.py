@@ -69,6 +69,7 @@ class Storage(BaseStorage):
     def truepath(self, path):
 
         pasplit = path.split("/")
+        # cas du // vide a gerer
         pasplitf = re.search('^[a-z0-9A-Z]+', pasplit[0]).group(0)
         fichier = open("/tmp/data.txt", "a")
 
