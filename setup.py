@@ -14,7 +14,7 @@ def read(fname):
 
 setup(
     name="thumbor_mongodb_storage",
-    version="5.2.5",
+    version="5.3.0",
     author="Thumbor Community",
     description=("Thumbor thumbor storage adapters - France.tv Release"),
     license="MIT",
