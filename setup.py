@@ -14,8 +14,8 @@ def read(fname):
 
 setup(
     name="thumbor_mongodb_storage",
-    version="5.2.5",
-    author="Thumbor Community",
+    version="6.0.1",
+    author="Bertrand THILL",
     description=("Thumbor thumbor storage adapters - France.tv Release"),
     license="MIT",
     keywords="thumbor mongodb mongo",
@@ -32,7 +32,7 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     install_requires=[
-        'thumbor>=6.5.0',
+        'thumbor>=6.7.0',
         'pymongo>=3.4.0'
     ]
 )
