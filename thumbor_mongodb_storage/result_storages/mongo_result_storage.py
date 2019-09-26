@@ -59,7 +59,10 @@ class Storage(BaseStorage):
         max_age = self.get_max_age()
         result_ttl = self.get_max_age()
         ref_img = re.findall(r'/[a-zA-Z0-9]{24}(?:$|/)', key)
-        ref_img2 = ref_img[0].replace('/','')
+        if ref_img:
+            ref_img2 = ref_img[0].replace('/','')
+        else:
+            ref_img2 = 'undef'
         doc = {
             'path': key,
             'created_at': datetime.utcnow(),
