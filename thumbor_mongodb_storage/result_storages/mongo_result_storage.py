@@ -60,6 +60,12 @@ class Storage(BaseStorage):
         key = self.get_key_from_request()
         max_age = self.get_max_age()
         result_ttl = self.get_max_age()
+        ref_img = ''
+        ref_img = re.findall(r'/[a-zA-Z0-9]{24}(?:$|/)', key)
+        if ref_img:
+            ref_img2 = ref_img[0].replace('/','')
+        else:
+            ref_img2 = 'undef'
         if self.is_auto_webp:
             content_t = 'webp'
         else:
@@ -68,7 +74,8 @@ class Storage(BaseStorage):
             'path': key,
             'created_at': datetime.utcnow(),
             'data': Binary(bytes),
-            'content-type': content_t
+            'content-type': content_t,
+            'ref_id': ref_img2
             }
         doc_cpm = dict(doc)
 
