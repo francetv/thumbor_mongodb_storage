@@ -11,6 +11,7 @@ from pymongo import MongoClient
 from thumbor.result_storages import BaseStorage
 from thumbor.utils import logger
 import bson
+import re
 from bson.binary import Binary
 
 class Storage(BaseStorage):
@@ -57,10 +58,13 @@ class Storage(BaseStorage):
         key = self.get_key_from_request()
         max_age = self.get_max_age()
         result_ttl = self.get_max_age()
+        ref_img = re.findall(r'/[a-zA-Z0-9]{24}(?:$|/)', key)
+        ref_img2 = ref_img[0].replace('/','')
         doc = {
             'path': key,
             'created_at': datetime.utcnow(),
             'data': Binary(bytes)
+            'ref_id': ref_img2
             }
         doc_cpm = dict(doc)
 
