@@ -66,7 +66,7 @@ class Storage(BaseStorage):
         doc = {
             'path': key,
             'created_at': datetime.utcnow(),
-            'data': Binary(bytes)
+            'data': Binary(bytes),
             'ref_id': ref_img2
             }
         doc_cpm = dict(doc)
