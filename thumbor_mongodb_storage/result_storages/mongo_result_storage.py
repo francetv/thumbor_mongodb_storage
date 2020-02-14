@@ -4,9 +4,9 @@
 # Copyright (c) 2019 HZ HZ@blackhand.org
 
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timedelta
-from cStringIO import StringIO
+from io import StringIO
 from pymongo import MongoClient
 from thumbor.result_storages import BaseStorage
 from thumbor.utils import logger
@@ -17,7 +17,7 @@ from bson.binary import Binary
 class Storage(BaseStorage):
 
     def __conn__(self):
-        password = urllib.quote_plus(self.context.config.MONGO_RESULT_STORAGE_SERVER_PASSWORD)
+        password = urllib.parse.quote_plus(self.context.config.MONGO_RESULT_STORAGE_SERVER_PASSWORD)
         user = self.context.config.MONGO_RESULT_STORAGE_SERVER_USER
         if not self.context.config.MONGO_RESULT_STORAGE_SERVER_REPLICASET:
           uri = 'mongodb://'+ user +':' + password + '@' + self.context.config.MONGO_RESULT_STORAGE_SERVER_HOST + '/?authSource=' + self.context.config.MONGO_RESULT_STORAGE_SERVER_DB
@@ -66,7 +66,7 @@ class Storage(BaseStorage):
         doc = {
             'path': key,
             'created_at': datetime.utcnow(),
-            'data': Binary(bytes)
+            'data': Binary(bytes),
             'ref_id': ref_img2
             }
         doc_cpm = dict(doc)
