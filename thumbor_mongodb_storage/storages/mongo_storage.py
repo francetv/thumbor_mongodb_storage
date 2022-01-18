@@ -7,7 +7,7 @@ import gridfs
 import urllib
 import re
 from datetime import datetime, timedelta
-from cStringIO import StringIO
+from io import StringIO
 from pymongo import MongoClient
 from thumbor.storages import BaseStorage
 from tornado.concurrent import return_future
